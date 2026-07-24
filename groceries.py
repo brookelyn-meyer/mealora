@@ -69,51 +69,42 @@ show_groceries(groceries)
 # 3. Enter Location:
 # 4. Enter expiration date:
 
-def add_grocery(groceries):
-    # asks the user to input the grocery name
-    print(f"Enter grocery name:")
-    grocery_name = input()
-    print(f"Grocery Added: {grocery_name}")
-    # asks the user to enter the quantity
-    print(f"Enter quantity:")
-    quantity = input()
-    print(f"Updated Quantity: {quantity}")
-    # asks the user to enter the location of the groceries
-    print(f"Enter Location:")
-    location = input()
-    print(f"Location: {location}")
-    #asks the user to enter the expiration date
-    print(f"Enter expiration date:")
-    expiration_date = input()
-    print(f"Expiration date: {expiration_date}")
+# this function cleans up the code by putting all of the user input variables in one place, and creating a new dictionary for the grocery information, then returns it.
+def get_grocery_information():
+    grocery_name = input("Enter grocery name: ")
+    quantity = input("Enter quantity: ")
+    location = input("Enter location: ")
+    expiration_date = input("Enter expiration date: ")
 
-    print(f"Do you want to add more groceries?:")
-    user_input = input().lower()
+    grocery_information = {
+        "name": grocery_name,
+        "quantity": quantity,
+        "location": location,
+        "expiration_date": expiration_date
+    }
+
+    return grocery_information
+
+# this function checks if the user inputs yes, then it calls the get grocery information function which helps keep it organized, and appends it to the end of the groceries
+# dictionary. Then prints out the grocery added with the information, then it asks again if you want to add another grocery item and if you type anything other than yes that means no.
+# empty print statement to make the code look nicer, then it prints updated grocery list and shows the groceries. loop ends and we print the grocery list and add the groceries so
+# that they will be saved
+def add_grocery(groceries):
+    user_input = "yes"
+
     while user_input == "yes":
-            print(f"Enter another grocery:")
-            new_grocery = input().lower()
-            print(f"Grocery Added: {new_grocery}")
-            # asks the user to enter the quantity
-            print(f"Enter quantity:")
-            quantity = input()
-            print(f"Updated Quantity: {quantity}")
-            # asks the user to enter the location of the groceries
-            print(f"Enter Location:")
-            location = input()
-            print(f"Location: {location}")
-            #asks the user to enter the expiration date
-            print(f"Enter expiration date:")
-            expiration_date = input()
-            print(f"Expiration date: {expiration_date}")
-            print("Do you want to add another grocery?")
-            user_input = input().lower()
-            # adds the new groceries to our groceries list!
-            groceries.append({
-            "name": new_grocery,
-            "quantity": quantity,
-            "location": location,
-            "expiration_date": expiration_date
-            })
+        grocery_information = get_grocery_information()
+        groceries.append(grocery_information)
+
+        print(f"Grocery Added: {grocery_information['name']}")
+
+        user_input = input(
+            "Do you want to add another grocery? yes/no: "
+        ).lower()
+
+    print()
+    print("Updated Grocery List:")
+    show_groceries(groceries)
 
     
     print(  )
