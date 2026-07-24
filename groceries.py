@@ -1,3 +1,6 @@
+
+from database import add_grocery_to_database, get_all_groceries
+
 # list of groceries that are in stock
 
 groceries = [
@@ -48,20 +51,22 @@ groceries = [
 
 
 # prints a list of the groceries name, quantity, location, and when it expires
-def show_groceries(groceries):
-    print(  )
-    print("===== My Groceries =====")
-    print(  )
-    for grocery in groceries:
-        print(f"Name:", grocery["name"])
-        print(f"Quantity:", grocery["quantity"])
-        print(f"Location:", grocery["location"])
-        print(f"Expires:", grocery["expiration_date"])
-        print(  )
+def show_groceries():
+    groceries = get_all_groceries()
 
+    print()
+    print("===== Grocery List =====")
+
+    for grocery in groceries:
+        print(f"ID: {grocery[0]}")
+        print(f"Name: {grocery[1]}")
+        print(f"Quantity: {grocery[2]}")
+        print(f"Location: {grocery[3]}")
+        print(f"Expires: {grocery[4]}")
+        print()
 
 # calls the show_groceries function with the groceries parameter from the groceries dictionary
-show_groceries(groceries)
+show_groceries()
 
 # create a program that asks the user to
 # 1. Enter grocery name:
@@ -94,7 +99,12 @@ def add_grocery(groceries):
 
     while user_input == "yes":
         grocery_information = get_grocery_information()
-        groceries.append(grocery_information)
+        add_grocery_to_database(
+        grocery_information["name"],
+        grocery_information["quantity"],
+        grocery_information["location"],
+        grocery_information["expiration_date"]
+)
 
         print(f"Grocery Added: {grocery_information['name']}")
 
@@ -104,12 +114,12 @@ def add_grocery(groceries):
 
     print()
     print("Updated Grocery List:")
-    show_groceries(groceries)
+    show_groceries()
 
     
     print(  )
     print(f"Updated Grocery List:")
-    show_groceries(groceries)
+    show_groceries()
 
 
 add_grocery(groceries)
