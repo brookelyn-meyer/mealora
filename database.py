@@ -57,3 +57,33 @@ def get_all_groceries():
     connection.close()
 
     return groceries
+
+
+
+def delete_grocery_from_database(grocery_id):
+    connection = psycopg.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT")
+    )
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM groceries
+        WHERE id = %s
+        """,
+        (grocery_id,)
+    )
+
+    connection.commit()
+
+    deleted_rows = cursor.rowcount
+
+    cursor.close()
+    connection.close()
+
+    return deleted_rows

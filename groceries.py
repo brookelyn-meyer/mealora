@@ -1,5 +1,8 @@
-
-from database import add_grocery_to_database, get_all_groceries
+from database import (
+    add_grocery_to_database,
+    get_all_groceries,
+    delete_grocery_from_database
+)
 
 # list of groceries that are in stock
 
@@ -125,4 +128,17 @@ def add_grocery(groceries):
 add_grocery(groceries)
 
 
+def delete_grocery():
+    show_groceries()
 
+    grocery_id = input("Enter the ID of the grocery you want to delete: ")
+
+    deleted_rows = delete_grocery_from_database(grocery_id)
+
+    if deleted_rows == 1:
+        print("Grocery deleted successfully!")
+    else:
+        print("No grocery was found with that ID.")
+
+
+delete_grocery()
