@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 function App() {
-  const [groceries, setGroceries] = useState([]); // gives react a place to remember data
+  const [groceries, setGroceries] = useState([]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/groceries")
@@ -16,12 +16,12 @@ function App() {
     <>
       <h1>🍎 MealOra</h1>
 
-      {groceries.map((grocery) => ( // .map() is the react equivalent of for grocery in groceries (python loop!)
-        <div key={grocery[0]}>
-          <h3>{grocery[1]}</h3>
-          <p>{grocery[2]}</p>
-          <p>{grocery[3]}</p>
-          <p>{grocery[4]}</p>
+      {groceries.map((grocery) => (
+        <div key={grocery.id}>
+          <h3>{grocery.name}</h3>
+          <p>Quantity: {grocery.quantity}</p>
+          <p>Location: {grocery.location}</p>
+          <p>Expires: {grocery.expiration_date}</p>
           <hr />
         </div>
       ))}
