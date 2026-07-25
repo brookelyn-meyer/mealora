@@ -1,46 +1,46 @@
 import os
+
 import psycopg
 from dotenv import load_dotenv
+
+
 load_dotenv()
 
 
-def add_grocery_to_database(name, quantity, location, expiration_date):
-    connection = psycopg.connect(
+def get_database_connection():
+    return psycopg.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT")
+        port=os.getenv("DB_PORT"),
     )
+
+
+def add_grocery_to_database(name, quantity, location, expiration_date):
+    connection = get_database_connection()
     cursor = connection.cursor()
 
     cursor.execute(
         """
         INSERT INTO groceries (name, quantity, location, expiration_date)
         VALUES (%s, %s, %s, %s)
+        RETURNING id;
         """,
-        (name, quantity, location, expiration_date)
+        (name, quantity, location, expiration_date),
     )
 
-    connection.commit()
+    grocery_id = cursor.fetchone()[0]
 
+    connection.commit()
     cursor.close()
     connection.close()
 
-    print(f"{name} was saved to the database!")
-
-
+    return grocery_id
 
 
 def get_all_groceries():
-    connection = psycopg.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT")
-    )
-
+    connection = get_database_connection()
     cursor = connection.cursor()
 
     cursor.execute(
@@ -59,16 +59,8 @@ def get_all_groceries():
     return groceries
 
 
-
 def delete_grocery_from_database(grocery_id):
-    connection = psycopg.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT")
-    )
-
+    connection = get_database_connection()
     cursor = connection.cursor()
 
     cursor.execute(
@@ -76,7 +68,7 @@ def delete_grocery_from_database(grocery_id):
         DELETE FROM groceries
         WHERE id = %s
         """,
-        (grocery_id,)
+        (grocery_id,),
     )
 
     connection.commit()
