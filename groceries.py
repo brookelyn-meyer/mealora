@@ -4,53 +4,6 @@ from database import (
     delete_grocery_from_database
 )
 
-# list of groceries that are in stock
-
-groceries = [
-    {
-        "name": "Ground Beef",
-        "quantity": 1,
-        "location": "Fridge",
-        "expiration_date": "2026-07-27"
-    },
-    {
-        "name": "Taco Seasoning",
-        "quantity": 1,
-        "location": "Pantry",
-        "expiration_date": "2027-03-15"
-    },
-    {
-        "name": "Tortillas",
-        "quantity": 8,
-        "location": "Pantry",
-        "expiration_date": "2026-08-02"
-    },
-    {
-        "name": "Shredded Cheese",
-        "quantity": 1,
-        "location": "Fridge",
-        "expiration_date": "2026-07-29"
-    },
-    {
-        "name": "Lettuce",
-        "quantity": 1,
-        "location": "Fridge",
-        "expiration_date": "2026-07-25"
-    },
-    {
-        "name": "Tomato",
-        "quantity": 2,
-        "location": "Counter",
-        "expiration_date": "2026-07-26"
-    },
-    {
-        "name": "Sour Cream",
-        "quantity": 1,
-        "location": "Fridge",
-        "expiration_date": "2026-08-01"
-    }
-]
-
 
 
 # prints a list of the groceries name, quantity, location, and when it expires
@@ -68,8 +21,8 @@ def show_groceries():
         print(f"Expires: {grocery[4]}")
         print()
 
-# calls the show_groceries function with the groceries parameter from the groceries dictionary
-show_groceries()
+
+
 
 # create a program that asks the user to
 # 1. Enter grocery name:
@@ -97,7 +50,7 @@ def get_grocery_information():
 # dictionary. Then prints out the grocery added with the information, then it asks again if you want to add another grocery item and if you type anything other than yes that means no.
 # empty print statement to make the code look nicer, then it prints updated grocery list and shows the groceries. loop ends and we print the grocery list and add the groceries so
 # that they will be saved
-def add_grocery(groceries):
+def add_grocery():
     user_input = "yes"
 
     while user_input == "yes":
@@ -125,7 +78,7 @@ def add_grocery(groceries):
     show_groceries()
 
 
-add_grocery(groceries)
+
 
 
 def delete_grocery():
@@ -141,4 +94,38 @@ def delete_grocery():
         print("No grocery was found with that ID.")
 
 
-delete_grocery()
+def show_menu():
+    print()
+    print("===== MealOra =====")
+    print("1. View groceries")
+    print("2. Add grocery")
+    print("3. Delete grocery")
+    print("4. Exit")
+
+    
+def main():
+    while True:
+        show_menu()
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            show_groceries()
+
+        elif choice == "2":
+            add_grocery()
+
+        elif choice == "3":
+            delete_grocery()
+
+        elif choice == "4":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid option. Please choose 1 through 4.")
+
+            
+
+if __name__ == "__main__":
+    main()
