@@ -1,10 +1,14 @@
 from datetime import date
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from database import add_grocery_to_database, get_all_groceries
+from database import (
+    add_grocery_to_database,
+    get_all_groceries,
+    delete_grocery_from_database,
+)
 
 
 app = FastAPI()
@@ -65,3 +69,12 @@ def create_grocery(grocery: GroceryCreate):
         "location": grocery.location,
         "expiration_date": grocery.expiration_date,
     }
+
+@app.delete("/groceries/{grocery_id}")
+def delete_grocery(grocery_id: int):
+    deleted_rows = delete_grocery_from_database(grocery_id)
+
+    if deleted_rows == 0:
+        raise HTTPException(status_code=404, detail="Grocery not found")
+
+    return {"message": "Grocery deleted"}

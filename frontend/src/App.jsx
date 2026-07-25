@@ -57,6 +57,24 @@ async function addGrocery(event) {
     });
 }, []);
 
+async function deleteGrocery(groceryId) {
+  const response = await fetch(
+    `http://127.0.0.1:8000/groceries/${groceryId}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (!response.ok) {
+    console.error("Could not delete grocery");
+    return;
+  }
+
+  setGroceries(
+    groceries.filter((grocery) => grocery.id !== groceryId)
+  );
+}
+
   return (
     <main className="app">
       <header>
@@ -104,17 +122,25 @@ async function addGrocery(event) {
           groceries.map((grocery) => (
             <article className="grocery-card" key={grocery.id}>
               <h2>{grocery.name}</h2>
+
               <p>
                 <strong>Quantity:</strong> {grocery.quantity}
               </p>
+
               <p>
                 <strong>Location:</strong> {grocery.location}
               </p>
+
               <p>
                 <strong>Expires:</strong>{" "}
                 {grocery.expiration_date || "No expiration date"}
               </p>
-            </article>
+
+              <button onClick={() => deleteGrocery(grocery.id)}>
+                Delete
+              </button>
+
+</article>
           ))
         )}
       </section>
