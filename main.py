@@ -8,8 +8,8 @@ from database import (
     add_grocery_to_database,
     get_all_groceries,
     delete_grocery_from_database,
+    update_grocery_in_database,
 )
-
 
 app = FastAPI()
 
@@ -61,6 +61,27 @@ def create_grocery(grocery: GroceryCreate):
         grocery.location,
         grocery.expiration_date,
     )
+
+    return {
+        "id": grocery_id,
+        "name": grocery.name,
+        "quantity": grocery.quantity,
+        "location": grocery.location,
+        "expiration_date": grocery.expiration_date,
+    }
+
+@app.put("/groceries/{grocery_id}")
+def update_grocery(grocery_id: int, grocery: GroceryCreate):
+    updated_rows = update_grocery_in_database(
+        grocery_id,
+        grocery.name,
+        grocery.quantity,
+        grocery.location,
+        grocery.expiration_date,
+    )
+
+    if updated_rows == 0:
+        raise HTTPException(status_code=404, detail="Grocery not found")
 
     return {
         "id": grocery_id,

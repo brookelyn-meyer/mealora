@@ -1,79 +1,147 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+// JSX = JavaScript XML
 function App() {
   const [groceries, setGroceries] = useState([]);
+
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [location, setLocation] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
 
-async function addGrocery(event) {
-  event.preventDefault();
-
-  const response = await fetch("http://127.0.0.1:8000/groceries", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: name,
-      quantity: quantity,
-      location: location,
-      expiration_date: expirationDate || null,
-    }),
-  });
-
-  const newGrocery = await response.json();
-
-  setGroceries([...groceries, newGrocery]);
-
-  setName("");
-  setQuantity("");
-  setLocation("");
-  setExpirationDate("");
-}
-
-
-
-
-
+  // null means we are adding a new grocery.
+  // A grocery ID means we are editing that grocery.
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-  fetch("http://127.0.0.1:8000/groceries")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Could not load groceries");
-      }
+    fetch("http://127.0.0.1:8000/groceries")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Could not load groceries");
+        }
 
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Groceries received:", data);
-      setGroceries(data);
-    })
-    .catch((error) => {
-      console.error("Error loading groceries:", error);
-    });
-}, []);
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Groceries received:", data);
+        setGroceries(data);
+      })
+      .catch((error) => {
+        console.error("Error loading groceries:", error);
+      });
+  }, []);
 
-async function deleteGrocery(groceryId) {
-  const response = await fetch(
-    `http://127.0.0.1:8000/groceries/${groceryId}`,
-    {
-      method: "DELETE",
-    }
-  );
-
-  if (!response.ok) {
-    console.error("Could not delete grocery");
-    return;
+  function clearForm() {
+    setName("");
+    setQuantity("");
+    setLocation("");
+    setExpirationDate("");
+    setEditingId(null);
   }
 
-  setGroceries(
-    groceries.filter((grocery) => grocery.id !== groceryId)
-  );
-}
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (editingId === null) {
+      await addGrocery();
+    } else {
+      await updateGrocery();
+    }
+  }
+
+  async function addGrocery() {
+    const response = await fetch("http://127.0.0.1:8000/groceries", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        quantity: quantity,
+        location: location,
+        expiration_date: expirationDate || null,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Could not add grocery");
+      return;
+    }
+
+    const newGrocery = await response.json();
+
+    setGroceries([...groceries, newGrocery]);
+    clearForm();
+  }
+
+  function startEditing(grocery) {
+    setEditingId(grocery.id);
+    setName(grocery.name);
+    setQuantity(grocery.quantity);
+    setLocation(grocery.location);
+    setExpirationDate(grocery.expiration_date || "");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  async function updateGrocery() {
+    const response = await fetch(
+      `http://127.0.0.1:8000/groceries/${editingId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          quantity: quantity,
+          location: location,
+          expiration_date: expirationDate || null,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Could not update grocery");
+      return;
+    }
+
+    const updatedGrocery = await response.json();
+
+    setGroceries(
+      groceries.map((grocery) =>
+        grocery.id === editingId ? updatedGrocery : grocery
+      )
+    );
+
+    clearForm();
+  }
+
+  async function deleteGrocery(groceryId) {
+    const response = await fetch(
+      `http://127.0.0.1:8000/groceries/${groceryId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Could not delete grocery");
+      return;
+    }
+
+    setGroceries(
+      groceries.filter((grocery) => grocery.id !== groceryId)
+    );
+
+    if (editingId === groceryId) {
+      clearForm();
+    }
+  }
 
   return (
     <main className="app">
@@ -82,38 +150,47 @@ async function deleteGrocery(groceryId) {
         <p>Keep track of what you have before it expires.</p>
       </header>
 
-    <form onSubmit={addGrocery}>
-  <input
-    type="text"
-    placeholder="Name"
-    value={name}
-    onChange={(event) => setName(event.target.value)}
-  />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          required
+        />
 
-  <input
-    type="text"
-    placeholder="Quantity"
-    value={quantity}
-    onChange={(event) => setQuantity(event.target.value)}
-  />
+        <input
+          type="text"
+          placeholder="Quantity"
+          value={quantity}
+          onChange={(event) => setQuantity(event.target.value)}
+          required
+        />
 
-  <input
-    type="text"
-    placeholder="Location"
-    value={location}
-    onChange={(event) => setLocation(event.target.value)}
-  />
+        <input
+          type="text"
+          placeholder="Location"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+          required
+        />
 
-  <input
-    type="date"
-    value={expirationDate}
-    onChange={(event) => setExpirationDate(event.target.value)}
-  />
+        <input
+          type="date"
+          value={expirationDate}
+          onChange={(event) => setExpirationDate(event.target.value)}
+        />
 
-  <button type="submit">
-    Add Grocery
-  </button>
-</form>
+        <button type="submit">
+          {editingId === null ? "Add Grocery" : "Save Changes"}
+        </button>
+
+        {editingId !== null && (
+          <button type="button" onClick={clearForm}>
+            Cancel
+          </button>
+        )}
+      </form>
 
       <section className="grocery-list">
         {groceries.length === 0 ? (
@@ -136,11 +213,14 @@ async function deleteGrocery(groceryId) {
                 {grocery.expiration_date || "No expiration date"}
               </p>
 
+              <button onClick={() => startEditing(grocery)}>
+                Edit
+              </button>
+
               <button onClick={() => deleteGrocery(grocery.id)}>
                 Delete
               </button>
-
-</article>
+            </article>
           ))
         )}
       </section>

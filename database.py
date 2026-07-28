@@ -79,3 +79,40 @@ def delete_grocery_from_database(grocery_id):
     connection.close()
 
     return deleted_rows
+
+def update_grocery_in_database(
+    grocery_id,
+    name,
+    quantity,
+    location,
+    expiration_date,
+):
+    connection = get_database_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        UPDATE groceries
+        SET name = %s,
+            quantity = %s,
+            location = %s,
+            expiration_date = %s
+        WHERE id = %s
+        """,
+        (
+            name,
+            quantity,
+            location,
+            expiration_date,
+            grocery_id,
+        ),
+    )
+
+    connection.commit()
+
+    updated_rows = cursor.rowcount
+
+    cursor.close()
+    connection.close()
+
+    return updated_rows
