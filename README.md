@@ -33,3 +33,5 @@ cd frontend
 npm install
 npm run dev
 
+<img width="1122" height="875" alt="mealorascreenshot" src="https://github.com/user-attachments/assets/75eb71b1-cb53-45f0-85c9-394de24ec1f4" />
+![Uploading mealorascreenshot.png…]()
