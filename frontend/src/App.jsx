@@ -146,7 +146,8 @@ function App() {
   return (
     <main className="app">
       <header>
-        <h1>🍎 MealOra</h1>
+        <p className="eyebrow">Your digital pantry</p>
+        <h1>MealOra</h1>
         <p>Keep track of what you have before it expires.</p>
       </header>
 

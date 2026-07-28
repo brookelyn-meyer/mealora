@@ -4,48 +4,261 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  color: #222;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background:
+    linear-gradient(rgba(255, 250, 247, 0.92), rgba(255, 250, 247, 0.92)),
+    radial-gradient(circle at top left, #ffd9d2, transparent 38%),
+    radial-gradient(circle at bottom right, #f9c6d8, transparent 34%);
+  color: #000;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 .app {
-  width: min(900px, 90%);
+  width: min(1100px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 56px 0 80px;
 }
 
 header {
   margin-bottom: 30px;
+  text-align: center;
 }
 
 header h1 {
-  margin-bottom: 8px;
-  font-size: 40px;
+  margin: 0;
+  color: #000;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.6rem, 7vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: -2px;
 }
 
 header p {
-  margin: 0;
-  color: #666;
+  margin: 14px auto 0;
+  max-width: 520px;
+  color: #000;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: #000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+form {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  padding: 22px;
+  margin-bottom: 34px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(143, 63, 76, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(91, 54, 61, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+input {
+  width: 100%;
+  padding: 14px 15px;
+  color: #000;
+  background: #fffaf8;
+  border: 1px solid #ead9d5;
+  border-radius: 13px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;  /* this is what makes the grocery cards move when your mouse goes over it */
+}
+
+input::placeholder {
+  color: #aa9996;
+}
+
+input:focus {
+  border-color: #f6b6c8;
+  box-shadow: 0 0 0 4px rgba(246,182,200,.25);
+  transform: translateY(-1px);
+}
+
+form button {
+  min-height: 48px;
+  padding: 12px 18px;
+  color: white;
+  font-weight: 700;
+  background: #f7b8cf;
+  border: none;
+  border-radius: 13px;
+  box-shadow: 0 8px 18px rgba(143, 63, 76, 0.2);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+form button:hover {
+  background: #ef9fbd;
+  box-shadow: 0 10px 22px rgba(143, 63, 76, 0.27);
+  transform: translateY(-2px);
+}
+
+form button[type="button"] {
+  color: #704f55;
+  background: #f4e5e7;
+  box-shadow: none;
+}
+
+form button[type="button"]:hover {
+  background: #ecd6da;
 }
 
 .grocery-list {
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.grocery-list > p {
+  grid-column: 1 / -1;
+  padding: 50px 20px;
+  color: #8a7977;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed #d8bfc1;
+  border-radius: 20px;
 }
 
 .grocery-card {
-  padding: 20px;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  padding: 24px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(143, 63, 76, 0.1);
+  border-radius: 22px;
+  box-shadow: 0 15px 35px rgba(91, 54, 61, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.grocery-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  content: "";
+  background: linear-gradient(90deg,#ffd4e4,#f7b8cf);
+}
+
+.grocery-card:hover {
+  box-shadow: 0 22px 45px rgba(91, 54, 61, 0.13);
+  transform: translateY(-5px);
 }
 
 .grocery-card h2 {
-  margin-top: 0;
-  margin-bottom: 12px;
+  margin: 8px 0 20px;
+  color: #000;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
 }
 
 .grocery-card p {
-  margin: 8px 0;
+  margin: 7px 0;
+  color: #000;
+  line-height: 1.5;
+}
+
+.grocery-card strong {
+  color: #000;
+}
+
+.grocery-card button {
+  padding: 10px 15px;
+  margin-top: auto;
+  font-weight: 700;
+  border-radius: 11px;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.grocery-card button:first-of-type {
+  margin-top: 22px;
+  color: #7b414c;
+  background: #ffdce8;
+  border: 1px solid #ead0d5;
+}
+
+.grocery-card button:first-of-type:hover {
+  background: #ecd6da;
+  transform: translateY(-1px);
+}
+
+.grocery-card button:last-of-type {
+  margin-top: 9px;
+  color: #9d3030;
+  background: transparent;
+  border: 1px solid #efc3c3;
+}
+
+.grocery-card button:last-of-type:hover {
+  background: #ffe6ef;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 850px) {
+  form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grocery-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .app {
+    width: min(100% - 22px, 1100px);
+    padding-top: 36px;
+  }
+
+  form,
+  .grocery-list {
+    grid-template-columns: 1fr;
+  }
+
+  form {
+    padding: 17px;
+    border-radius: 19px;
+  }
+
+  .grocery-card {
+    min-height: auto;
+  }
 }
